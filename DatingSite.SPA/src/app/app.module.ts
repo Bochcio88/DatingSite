@@ -34,6 +34,7 @@ import { PhotosComponent } from './users/photos/photos.component';
 import { TimeAgoPipe } from './_pipes/time-ago-pipe';
 import { LikesResolver } from './_resolvers/likes.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
+import { UserMessagesComponent } from './users/user-messages/user-messages.component';
 
 
 
@@ -55,7 +56,8 @@ export function getToken() {
       UserDatailComponent,
       UserEditComponent,
       PhotosComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      UserMessagesComponent
    ],
    imports: [
       HttpClientModule,
