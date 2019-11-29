@@ -24,14 +24,12 @@ export class MessagesComponent implements OnInit {
               private route: ActivatedRoute,
               private alertify: AlertifyService) { }
 
-  ngOnInit() {
-    this.route.data.subscribe(data => {
-      if (this.messages != null) {
-        this.messages = data.message.result;
-        this.pagination = data.message.pagination;
-      }
-    });
-  }
+              ngOnInit() {
+                this.route.data.subscribe(data => {
+                  this.messages = data.messages.result;
+                  this.pagination = data.messages.pagination;
+                });
+              }
 
 
   loadMessages() {
