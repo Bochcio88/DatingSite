@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/_services/user.service';
 import { User } from 'src/app/_models/user';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 // tslint:disable-next-line:max-line-length
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryActionComponent, NgxGalleryImageComponent, NgxGalleryArrowsComponent, NgxGalleryOrderedImage } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-user-detail',
@@ -12,7 +13,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryActi
   styleUrls: ['./user-detail.component.css']
 })
 export class UserDatailComponent implements OnInit {
-
+  @ViewChild('userTabs', { static: true }) userTabs: TabsetComponent;
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -41,6 +42,12 @@ export class UserDatailComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data.user;
     });
+
+    this.route.queryParams.subscribe(params => {
+      const selectTab = params.tab;
+      this.userTabs.tabs[selectTab > 0 ? selectTab : 0].active = true;
+    });
+
     this.galleryOptions = [
       {
           width: '500px',
@@ -55,6 +62,9 @@ export class UserDatailComponent implements OnInit {
     this.galleryImages = this.getImages();
   }
 
+  selectTab(tabId: number) {
+    this.userTabs.tabs[tabId].active = true;
+  }
 
 // tslint:disable-next-line:eofline
 }
