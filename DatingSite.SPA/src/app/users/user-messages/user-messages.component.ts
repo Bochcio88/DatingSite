@@ -36,7 +36,7 @@ export class UserMessagesComponent implements OnInit {
     this.userService.sendMessage(this.authService.decoderToken.nameid, this.newMessage)
     .subscribe((message: Message) => {
     this.messages.unshift(message);
-    this.newMessage = '';
+    this.newMessage.content = '';
   }, error => {
     this.alertfiy.error(error);
   });
