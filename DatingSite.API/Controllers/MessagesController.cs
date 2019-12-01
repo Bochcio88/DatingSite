@@ -97,5 +97,30 @@ namespace PortalRandkowy.API.Controllers
                 
             throw new Exception("Message cannot be created!");
         }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            var messageFromRepo = await _repository.GetMessage(id);
+
+            if(messageFromRepo.SenderId == userId)
+                messageFromRepo.SenderDeleted = true;
+            
+
+            if(messageFromRepo.RecipientId == userId)
+                messageFromRepo.RecipientDeleted = true;
+            
+            if(messageFromRepo.SenderDeleted == true && messageFromRepo.RecipientDeleted == true)
+                _repository.Delete(messageFromRepo);
+            
+            if(await _repository.SafeAll())
+                return NoContent();
+            
+            throw new Exception("Deleting message failed!");
+        }    
+            
     }
 }
