@@ -7,23 +7,23 @@
       <li *ngFor="let message of messages">
         <div *ngIf="message.senderId === recipientId">
           <span class="chat-img float-left">
-            <img src="{{message.senderPhotoUrl}}" alt="{{message.senderUsername}}" class="rounded-circle">
+              <img *ngIf="message?.senderPhotoUrl != null" src={{message?.senderPhotoUrl}} alt={{message?.senderUsername}} class="rounded-circle">
+            <img *ngIf="message?.senderPhotoUrl === null" src="{{'../../../../assets/user.png'}}" alt={{message?.senderUsername}} class="rounded-circle">
           </span>
           <div class="chat-body">
             <div class="header">
-              <!-- <strong class="primary-font">{{ message.senderUsername }}</strong> -->
               <small class="text-muted float-right">
                 <span class="fa fa-clock-o">  {{ message.dateSent | timeAgo }}</span>
               </small>
             </div>
             <p>{{ message.content }}</p>
-            <button class="btn btn-success" (click)="markAsReaded(message.id)">Readed</button>
           </div>
         </div>
 
         <div *ngIf="message.senderId != recipientId">
           <span class="chat-img float-right">
-            <img src="{{message.senderPhotoUrl}}" alt="{{message.senderUsername}}" class="rounded-circle">
+            <img *ngIf="message?.senderPhotoUrl != null" src={{message?.senderPhotoUrl}} alt={{message?.senderUsername}} class="rounded-circle">
+            <img *ngIf="message?.senderPhotoUrl === null" src="{{'../../../../assets/user.png'}}" alt={{message?.senderUsername}} class="rounded-circle">
           </span>
           <div class="chat-body">
             <div class="header">

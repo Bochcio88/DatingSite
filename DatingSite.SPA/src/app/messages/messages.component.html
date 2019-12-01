@@ -32,17 +32,20 @@
         <td>{{ message.content }}</td>
         <td>
           <div *ngIf="messageContainer != 'Outbox'">
-            <img src={{message?.senderPhotoUrl}} alt="sender photo" class="img-circle rounded-circle mr-1">
-            <strong>{{ message.senderUsername }}</strong>
+            <!-- <img *ngIf="message?.senderPhotoUrl != null" src={{message?.senderPhotoUrl}} alt="message?.senderUsername" class="img-circle rounded-circle mr-1">
+            <img *ngIf="message?.senderPhotoUrl === null" src="{{'../../../../assets/user.png'}}" alt="message?.senderUsername" class="img-circle rounded-circle mr-1"> -->
+            <strong>{{ message.senderUsername | titlecase }}</strong>
           </div>
           <div *ngIf="messageContainer == 'Outbox'">
-            <img src={{message?.recipientPhotoUrl}} alt="recipient photo" class="img-circle rounded-circle mr-1">
-            <strong>{{ message.recipientUsername }}</strong>
+            <!-- <img *ngIf="message?.recipientPhotoUrl != null" src={{message?.recipientPhotoUrl}} alt="message?.recipientUsername" class="img-circle rounded-circle mr-1">
+            <img *ngIf="message?.recipientPhotoUrl === null" src="{{'../../../../assets/user.png'}}" alt="message?.recipientUsername" class="img-circle rounded-circle mr-1"> -->
+
+            <strong>{{ message.recipientUsername | titlecase}}</strong>
           </div>
         </td>
         <td>{{ message.dateSent | timeAgo }}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteMessage(message.id)" (click)="$event.stopPropagation()">Delete</button>
+          <button class="btn btn-danger fa fa-trash" (click)="deleteMessage(message.id)" (click)="$event.stopPropagation()"></button>
         </td>
       </tr>
     </table>

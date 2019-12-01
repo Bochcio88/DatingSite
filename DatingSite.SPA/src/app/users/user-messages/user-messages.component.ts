@@ -29,15 +29,14 @@ export class UserMessagesComponent implements OnInit {
 }
 
   loadMessages() {
-    const currentUserId = this.authService.decoderToken.nameid;
+    const currentUserId = Number(this.authService.decoderToken.nameid);
     this.userService.getMessageThread(this.authService.decoderToken.nameid, this.recipientId)
     .pipe(
       tap(messages => {
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < messages.length; i++) {
           const recipientId = messages[i].recipientId;
-          // tslint:disable-next-line: triple-equals
-          if (currentUserId == recipientId ) {
+          if (currentUserId === recipientId ) {
             this.userService.markAsReaded(messages[i].id, currentUserId).subscribe();
           }
         }
