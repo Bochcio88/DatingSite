@@ -3,6 +3,7 @@ import { Message } from 'src/app/_models/message';
 import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-messages',
@@ -14,6 +15,7 @@ export class UserMessagesComponent implements OnInit {
   messages: Message[];
   newMessage: any = {};
 
+
   constructor(private userService: UserService,
               private authService: AuthService,
               private alertfiy: AlertifyService) { }
@@ -22,8 +24,25 @@ export class UserMessagesComponent implements OnInit {
     this.loadMessages();
   }
 
+  markAsReaded(id: number) {
+    this.userService.markAsReaded(id, this.authService.decoderToken.nameid).subscribe();
+}
+
   loadMessages() {
+    const currentUserId = this.authService.decoderToken.nameid;
     this.userService.getMessageThread(this.authService.decoderToken.nameid, this.recipientId)
+    .pipe(
+      tap(messages => {
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < messages.length; i++) {
+          const recipientId = messages[i].recipientId;
+          // tslint:disable-next-line: triple-equals
+          if (currentUserId == recipientId ) {
+            this.userService.markAsReaded(messages[i].id, currentUserId).subscribe();
+          }
+        }
+      })
+    )
     .subscribe(messages => {
       this.messages = messages;
     }, error => {

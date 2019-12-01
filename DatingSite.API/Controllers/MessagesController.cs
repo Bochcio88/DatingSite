@@ -126,6 +126,25 @@ namespace PortalRandkowy.API.Controllers
             
             throw new Exception("Deleting message failed!");
         }    
+        
+        [HttpPost("{id}/read")]
+        public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
             
+            var message = await _repository.GetMessage(id);
+
+            if(message.RecipientId != userId)
+                return Unauthorized();
+            
+            message.IsRead = true;
+            message.DataRead = DateTime.Now;
+
+            if(await _repository.SafeAll())
+                return NoContent();
+            
+            throw new Exception("Saving to database failed!");
+        }
     }
 }
