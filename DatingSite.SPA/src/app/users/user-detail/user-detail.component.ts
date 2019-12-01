@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 // tslint:disable-next-line:max-line-length
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryActionComponent, NgxGalleryImageComponent, NgxGalleryArrowsComponent, NgxGalleryOrderedImage } from 'ngx-gallery';
 import { TabsetComponent } from 'ngx-bootstrap';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -20,7 +21,8 @@ export class UserDatailComponent implements OnInit {
 
   constructor(private userService: UserService,
               private alertify: AlertifyService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private authService: AuthService) { }
 
               getImages() {
                 const imagesUrls = [];
@@ -60,6 +62,15 @@ export class UserDatailComponent implements OnInit {
   ];
 
     this.galleryImages = this.getImages();
+  }
+
+  sendLike(id: number) {
+    this.userService.sendLike(this.authService.decoderToken.nameid, id)
+      .subscribe(data => {
+        this.alertify.success('you liked: ' + this.user.username);
+      }, error => {
+        this.alertify.error(error);
+      });
   }
 
   selectTab(tabId: number) {
