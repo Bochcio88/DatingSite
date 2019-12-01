@@ -55,6 +55,11 @@ namespace PortalRandkowy.API.Controllers
             Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
 
             return Ok(messagesToReturn);
+
+            foreach (var message in messagesToReturn)
+            {
+                message.MessageContainer = messageParams.MessageContainer;
+            }
         }
 
         [HttpGet("thread/{recipientId}")]

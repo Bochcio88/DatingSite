@@ -16,5 +16,6 @@ namespace PortalRandkowy.API.Dtos
         public bool IsRead { get; set; }
         public DateTime? DataRead { get; set; }
         public DateTime DateSent { get; set; }
+        public string MessageContainer { get; set; }
     }
 }
