@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using PortalRandkowy.API.Models.Data;
 using PortalRandkowy.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,10 +41,11 @@ namespace PortalRandkowy.API
             {
                 x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonOptions(opt => {
-                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            // .AddJsonOptions(opt => {
+            //     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            // });
+            services.AddControllers().AddNewtonsoftJson();
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
@@ -62,9 +65,8 @@ namespace PortalRandkowy.API
                 });
             services.AddScoped<LogUserActivity>();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -90,8 +92,20 @@ namespace PortalRandkowy.API
             // app.UseHttpsRedirection();
             seeder.SeedUsers();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "spa",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                    endpoints.MapFallbackToController("Index", "Home", "Admin");
+                });
+            //app.UseMvc();
         }
     }
 }
